@@ -1,0 +1,10 @@
+[package]
+name = "vilme/statemachine"
+version = "0.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]
+Trove = "sleitnick/trove@0.4.0"
+Signal = "sleitnick/signal@1.1.0"
+Symbol = "sleitnick/symbol@2.0.0"
