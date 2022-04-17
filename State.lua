@@ -1,21 +1,38 @@
-local Trove = require(script.Parent.Trove)
+local Trove = require(script.Parent.Parent.Trove)
 
 local State = {}
 State.__index = State
+
+State.index = nil
 
 function State.CanEnter(): boolean
 	return true
 end
 
-function State.new()
-	local self = setmetatable({}, State)
+function State.new(): table
+	local state = {}
+	state.__index = state
 
-	self.trove = Trove.new()
+	state.trove = Trove.new()
 
-	return self
+	setmetatable(state, State)
+	return state
 end
 
-function State:HandleInput() end
+function State:Extend()
+	local state = {}
+	state.__index = state
+
+	setmetatable(state, self)
+	return state
+end
+
+function State.Enter()
+	
+end
+
+function State:HandleInput() 
+end
 
 function State:Destroy()
 	self.trove:Destroy()
