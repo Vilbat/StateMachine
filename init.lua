@@ -157,4 +157,8 @@ function StateMachine:Inherit(...): table
 	return stateMachine
 end
 
+function StateMachine:Destroy()
+	self[KEY_TROVE]:Destroy()
+end
+
 return StateMachine
