@@ -10,29 +10,16 @@ function State.CanEnter(): boolean
 end
 
 function State.new(): table
-	local state = {}
-	state.__index = state
+	local self = setmetatable({}, State)
 
-	state.trove = Trove.new()
+	self.trove = Trove.new()
 
-	setmetatable(state, State)
-	return state
+	return self
 end
 
-function State:Extend()
-	local state = {}
-	state.__index = state
+function State:Enter() end
 
-	setmetatable(state, self)
-	return state
-end
-
-function State.Enter()
-	
-end
-
-function State:HandleInput() 
-end
+function State:HandleInput() end
 
 function State:Destroy()
 	self.trove:Destroy()

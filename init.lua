@@ -87,7 +87,8 @@ function StateMachine:SetState(index: string)
 		self[KEY_CURRENT_STATE]:Destroy()
 	end
 
-	self[KEY_CURRENT_STATE] = state.Enter(table.unpack(self[KEY_DATA]))
+	self[KEY_CURRENT_STATE] = state.new()
+	self[KEY_CURRENT_STATE]:Enter(table.unpack(self[KEY_DATA]))
 
 	self.StateChanged:Fire(self[KEY_CURRENT_STATE])
 
