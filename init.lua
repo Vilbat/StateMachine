@@ -69,6 +69,10 @@ function StateMachine:SetState(index: string)
 		return
 	end
 
+	if not state.CanEnter(table.unpack(self[KEY_DATA])) then
+		return
+	end
+
 	if self[KEY_CURRENT_STATE] then
 		self[KEY_CURRENT_STATE]:Destroy()
 	end
