@@ -37,7 +37,6 @@ function StateMachine.new(config: StateMachineConfig)
 
 	self.StateChanged = self[KEY_TROVE]:Construct(Signal)
 
-	--self[KEY_STATES] = config.States
 	self[KEY_STATES] = {}
 
 	self[KEY_DEFAULT_STATE] = config.DefaultState
@@ -62,19 +61,6 @@ function StateMachine:AddStates(states: States)
 	end
 end
 
---[[
-function StateMachine:EditState(states: table)
-	for index, state in pairs(states) do
-		self[KEY_STATES][index] = state
-	end
-
-	local currentState = self:GetCurrentState()
-	if currentState then
-		self:SetState(currentState.index)
-	end
-end
-]]
-
 function StateMachine:SetState(index: string)
 	local state = self:GetState(index)
 
@@ -91,6 +77,7 @@ function StateMachine:SetState(index: string)
 	self[KEY_CURRENT_STATE]:Enter(table.unpack(self[KEY_DATA]))
 
 	self.StateChanged:Fire(self[KEY_CURRENT_STATE])
+	-- Should the update method run here?
 
 	return self[KEY_CURRENT_STATE]
 end
@@ -104,15 +91,17 @@ function StateMachine:GetState(index: string): table
 end
 
 function StateMachine:Update()
-	local state = self:GetCurrentState()
+	local initalState = self:GetCurrentState()
 
-	if not state then
-		state = self:SetState(self[KEY_DEFAULT_STATE])
+	if not initalState then
+		initalState = self:SetState(self[KEY_DEFAULT_STATE])
 	end
 
 	local input = self[KEY_INPUT_FUNCTION]()
+	local state = initalState
+
 	while state do
-		local newState = state.HandleInput(state, input)
+		local newState = state.HandleInput(initalState, input)
 		if newState then
 			local status = self:SetState(newState)
 			if status then
