@@ -64,12 +64,12 @@ end
 function StateMachine:SetState(index: string)
 	local state = self:GetState(index)
 
-	local currentState = getmetatable(self:GetCurrentState())
-	if currentState == state then
+	local currentState = self:GetCurrentState()
+	if getmetatable(currentState) == state then
 		return
 	end
 
-	if not state.CanEnter(table.unpack(self[KEY_DATA])) then
+	if not state.CanEnter(currentState, table.unpack(self[KEY_DATA])) then
 		return
 	end
 
@@ -79,9 +79,9 @@ function StateMachine:SetState(index: string)
 
 	self[KEY_CURRENT_STATE] = state.new()
 	self[KEY_CURRENT_STATE]:Enter(table.unpack(self[KEY_DATA]))
+	-- Should update method run here?
 
 	self.StateChanged:Fire(self[KEY_CURRENT_STATE])
-	-- Should the update method run here?
 
 	return self[KEY_CURRENT_STATE]
 end
