@@ -46,6 +46,10 @@ function StateMachine.new(config: StateMachineConfig)
 
 	self:AddStates(config.States or {})
 
+	self[KEY_TROVE]:Add(function()
+		self:ExitState()
+	end)
+
 	return self
 end
 
@@ -73,9 +77,7 @@ function StateMachine:SetState(index: string)
 		return
 	end
 
-	if self[KEY_CURRENT_STATE] then
-		self[KEY_CURRENT_STATE]:Destroy()
-	end
+	self:ExitState()
 
 	self[KEY_CURRENT_STATE] = state.new()
 	self[KEY_CURRENT_STATE]:Enter(table.unpack(self[KEY_DATA]))
@@ -84,6 +86,12 @@ function StateMachine:SetState(index: string)
 	self.StateChanged:Fire(self[KEY_CURRENT_STATE])
 
 	return self[KEY_CURRENT_STATE]
+end
+
+function StateMachine:ExitState()
+	if self[KEY_CURRENT_STATE] then
+		self[KEY_CURRENT_STATE]:Destroy()
+	end
 end
 
 function StateMachine:GetCurrentState(): table
