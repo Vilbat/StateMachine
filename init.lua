@@ -56,7 +56,9 @@ end
 function StateMachine:AddStates(states: States)
 	for _, state in ipairs(states) do
 		local index: string = state.index
-		self[KEY_STATES][index] = state
+		if index then
+			self[KEY_STATES][index] = state
+		end
 	end
 
 	local currentState = self:GetCurrentState()
@@ -102,7 +104,9 @@ function StateMachine:GetState(index: string): table
 	return self[KEY_STATES][index]
 end
 
-function StateMachine:Update()
+function StateMachine:Update(dt)
+	dt = dt or 0
+
 	local initalState = self:GetCurrentState()
 
 	if not initalState then
@@ -113,7 +117,7 @@ function StateMachine:Update()
 	local state = initalState
 
 	while state do
-		local newState = state.HandleInput(initalState, input)
+		local newState = state.HandleInput(initalState, input, dt)
 		if newState then
 			local status = self:SetState(newState)
 			if status then
